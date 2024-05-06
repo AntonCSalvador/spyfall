@@ -12,6 +12,8 @@ app.get('/', (req, res) => {
 });
 
 let users = {}; // Store socket IDs and usernames
+//let locations = {}; //to store locations later
+let locations = [];
 
 io.on('connection', (socket) => {
     // Initialize user object on new connection
@@ -54,7 +56,15 @@ function assignRolesAndNotify() {
             const roleMessage = users[id].role;
             io.to(id).emit('role assignment', roleMessage);
         });
+        assignLocation();
     }
+}
+
+function assignLocation() {
+     locations.push("Aruba", "BT", "AppleVille");
+     console.log("Amount of locations: " + locations.length);
+     console.log("Location 1: " + locations[1]);
+
 }
 
 server.listen(3000, () => {

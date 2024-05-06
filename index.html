@@ -16,6 +16,7 @@
     <button id="submitUsername">Set Username</button>
     <button id="startGame">Start Game</button>
     <button id="disconnect">Disconnect</button>
+    <textarea id="customLocations" maxlength="20000" spellcheck="false" placeholder="Minimum of 10 words. 1-32 characters per word! 20000 characters maximum. Separated by a , (comma)"></textarea>
 
     <div id="userList"></div>
     <div id="roleMessage"></div>
@@ -26,6 +27,7 @@
 
         document.getElementById('submitUsername').addEventListener('click', function() {
             const username = document.getElementById('usernameInput').value;
+            
             if (username) {
                 socket.emit('set username', username);
             } else {
@@ -34,7 +36,15 @@
         });
 
         document.getElementById('startGame').addEventListener('click', function() {
+            const customLocations = document.getElementById('customLocations').value;
+            console.log("custom locations: " + customLocations);
             socket.emit('start game');
+            if(customLocations.length > 10){
+               socket.emit('send locations', customLocations);
+            }
+            else{
+               console.log("didnt input enough locations");
+            }
         });
 
         document.getElementById('disconnect').addEventListener('click', function() {

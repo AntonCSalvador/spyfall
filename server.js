@@ -29,7 +29,10 @@ io.on('connection', (socket) => {
             console.log('no users i think');
         }
     });
-
+    socket.on('send locations', (customLocations) => {
+        //console.log('in the socket part: ' + customLocations);
+        assignLocation(customLocations); // assign custom locations
+    });
     socket.on('start game', () => {
         assignRolesAndNotify(); // assign users
     });
@@ -56,14 +59,21 @@ function assignRolesAndNotify() {
             const roleMessage = users[id].role;
             io.to(id).emit('role assignment', roleMessage);
         });
-        assignLocation();
+        //assignLocation();
     }
 }
 
-function assignLocation() {
-     locations.push("Aruba", "BT", "AppleVille");
+function assignLocation(customLocations) {
+     const locationsArray = customLocations.split(',').map(location => location.trim());
+
+     const cleanLocationsArray = locationsArray.filter(location => location !== ''); // clean up the array
+     //locations.push(locationsArray);
+     locations = [...cleanLocationsArray];
+     let random = Math.floor(Math.random() * locations.length);
+     console.log("custom locations: " + customLocations);
      console.log("Amount of locations: " + locations.length);
-     console.log("Location 1: " + locations[1]);
+     console.log("picking from array number: " + random);
+     console.log("Location: " + locations[random]);
 
 }
 

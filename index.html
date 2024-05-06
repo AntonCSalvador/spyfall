@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO Role Assignment</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #messages { margin-top: 20px; }
+        input, button { padding: 8px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Role Assignment Game</h2>
+    <input id="usernameInput" type="text" placeholder="Enter your username" autocomplete="off">
+    <button id="submitUsername">Set Username</button>
+    <button id="disconnect">Disconnect</button>
+
+    <div id="roleMessage"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        document.getElementById('submitUsername').addEventListener('click', function() {
+            const username = document.getElementById('usernameInput').value;
+            if (username) {
+                socket.emit('set username', username);
+            } else {
+                alert('Please enter a username.');
+            }
+        });
+
+        document.getElementById('disconnect').addEventListener('click', function() {
+            socket.disconnect();
+            setTimeout(() => {
+                socket.connect();
+            }, 1000); // Reconnect after 1 second
+        });
+
+        socket.on('role assignment', (role) => {
+            const roleMessageDiv = document.getElementById('roleMessage');
+            roleMessageDiv.textContent = `Your role: ${role}`;
+        });
+    </script>
+</body>
+</html>
+

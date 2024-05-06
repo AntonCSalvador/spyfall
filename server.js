@@ -14,13 +14,22 @@ app.get('/', (req, res) => {
 let users = {}; // Store socket IDs and usernames
 
 io.on('connection', (socket) => {
-    socket.on('set username', (username) => {
-        users[socket.id].username = username;
-        io.emit('user list', Object.values(users).map(user => user.username)); // Send updated user list
+    // Initialize user object on new connection
+    users[socket.id] = { username: '', role: '' };
+    
+     socket.on('set username', (username) => {
+        if (users[socket.id]) {
+            users[socket.id].username = username;
+            // Emit updated user list to all clients
+            io.emit('user list', Object.values(users).map(user => user.username));
+        }
+        else{
+            console.log('no users i think');
+        }
     });
 
     socket.on('start game', () => {
-        assignRolesAndNotify(); // This function remains the same as previously defined
+        assignRolesAndNotify(); // assign users
     });
 
     socket.on('disconnect', () => {

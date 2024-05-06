@@ -24,6 +24,8 @@ io.on('connection', (socket) => {
             username = name;
             usernameSet = true;
             socket.emit('username set', true);
+            io.emit('user list', Object.values(users).map(user => user.username));
+
         } else {
             socket.emit('username set', false);
         }

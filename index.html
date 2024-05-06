@@ -6,7 +6,7 @@
     <title>Socket.IO Role Assignment</title>
     <style>
         body { font-family: Arial, sans-serif; }
-        #messages { margin-top: 20px; }
+        #userList { margin-top: 20px; }
         input, button { padding: 8px; margin: 5px; }
     </style>
 </head>
@@ -14,8 +14,10 @@
     <h2>Role Assignment Game</h2>
     <input id="usernameInput" type="text" placeholder="Enter your username" autocomplete="off">
     <button id="submitUsername">Set Username</button>
+    <button id="startGame">Start Game</button>
     <button id="disconnect">Disconnect</button>
 
+    <div id="userList"></div>
     <div id="roleMessage"></div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -31,12 +33,22 @@
             }
         });
 
+        document.getElementById('startGame').addEventListener('click', function() {
+            socket.emit('start game');
+        });
+
         document.getElementById('disconnect').addEventListener('click', function() {
             socket.disconnect();
             setTimeout(() => {
                 socket.connect();
             }, 1000); // Reconnect after 1 second
         });
+
+          socket.on('user list', (usernames) => {
+              const userListDiv = document.getElementById('userList');
+              userListDiv.innerHTML = '<strong>Connected Users:</strong><br>' + usernames.join('<br>');
+          });
+
 
         socket.on('role assignment', (role) => {
             const roleMessageDiv = document.getElementById('roleMessage');

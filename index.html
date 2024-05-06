@@ -20,7 +20,7 @@
 
     <div id="userList"></div>
     <div id="roleMessage"></div>
-
+    <div id="locationDisplay"></div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
@@ -64,6 +64,14 @@
             const roleMessageDiv = document.getElementById('roleMessage');
             roleMessageDiv.textContent = `Your role: ${role}`;
         });
+        
+        socket.on('location notification', (location) => {
+          console.log('Your location: ' + location);
+          const locationDiv = document.getElementById('locationDisplay');
+          locationDiv.textContent = `Your location: ${location}`;
+        });
+
+
     </script>
 </body>
 </html>

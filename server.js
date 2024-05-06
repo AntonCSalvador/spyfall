@@ -29,12 +29,15 @@ io.on('connection', (socket) => {
             console.log('no users i think');
         }
     });
-    socket.on('send locations', (customLocations) => {
+//    socket.on('send locations', (customLocations) => {
         //console.log('in the socket part: ' + customLocations);
-        assignLocation(customLocations); // assign custom locations
-    });
+//        assignLocation(customLocations); // assign custom locations
+//    });
     socket.on('start game', () => {
-        assignRolesAndNotify(); // assign users
+        socket.on('send locations', (customLocations) => {
+          //console.log('in the socket part: ' + customLocations);
+          assignLocation(customLocations); // assign custom locations
+        });
     });
 
     socket.on('disconnect', () => {
@@ -60,7 +63,16 @@ function assignRolesAndNotify() {
             io.to(id).emit('role assignment', roleMessage);
         });
         //assignLocation();
-    }
+        if(locations.length > 0){
+            let randomLocation = locations[Math.floor(Math.random() * locations.length)];
+            ids.forEach(id => {
+               if(users[id].role === 'Crewmate'){
+                    console.log('crewmates are assigned to: ' + randomLocation);
+                    io.to(id).emit('location notification', randomLocation);
+               }
+            });
+        }
+     }
 }
 
 function assignLocation(customLocations) {
@@ -74,7 +86,7 @@ function assignLocation(customLocations) {
      console.log("Amount of locations: " + locations.length);
      console.log("picking from array number: " + random);
      console.log("Location: " + locations[random]);
-
+     assignRolesAndNotify();
 }
 
 server.listen(3000, () => {

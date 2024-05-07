@@ -20,6 +20,7 @@
 
     <div id="userList"></div>
     <div id="roleMessage"></div>
+    <div id="timer"></div>
     <div id="locationDisplay"></div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -39,12 +40,12 @@
             const customLocations = document.getElementById('customLocations').value;
             console.log("custom locations: " + customLocations);
             socket.emit('start game');
-            if(customLocations.length > 10){
+            //if(customLocations.length > 10){
                socket.emit('send locations', customLocations);
-            }
-            else{
-               console.log("didnt input enough locations");
-            }
+            //}
+            //else{
+               //console.log("didnt input enough locations");
+            //}
         });
 
         document.getElementById('disconnect').addEventListener('click', function() {
@@ -63,6 +64,7 @@
         socket.on('role assignment', (role) => {
             const roleMessageDiv = document.getElementById('roleMessage');
             roleMessageDiv.textContent = `Your role: ${role}`;
+            startTimer(5);
         });
         
         socket.on('location notification', (location) => {
@@ -83,8 +85,25 @@
              locationDiv.appendChild(img);
         });
 
+         function startTimer(duration) {
+             let timer = duration * 60; // convert to seconds
+             const timerDiv = document.getElementById('timer');
+             const interval = setInterval(() => {
+                 let minutes = parseInt(timer / 60, 10);
+                 let seconds = parseInt(timer % 60, 10);
 
-    </script>
+                 minutes = minutes < 10 ? "0" + minutes : minutes;
+                 seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                 timerDiv.textContent = minutes + ":" + seconds;
+
+                 if (--timer < 0) {
+                     timerDiv.textContent = "Time's up!";
+                     clearInterval(interval);
+                 }
+             }, 1000);
+         }
+     </script>
 </body>
 </html>
 

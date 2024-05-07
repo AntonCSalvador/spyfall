@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const { createServer } = require('node:http');
 const { join } = require('node:path');
@@ -7,6 +9,8 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
+const TOKEN = process.env.HUGGINGFACE;  // This will read the HUGGINGFACE token from .env
+
 app.get('/', (req, res) => {
     res.sendFile(join(__dirname, 'index.html'));
 });
@@ -14,6 +18,8 @@ app.get('/', (req, res) => {
 let users = {}; // Store socket IDs and usernames
 //let locations = {}; //to store locations later
 let locations = [];
+const preSetLocations = "Space Station, Submarine, Bank, Casino, Circus Tent, Corporate Party, Hotel, Hospital, Movie Studio, Ocean Liner, Passenger Train, Pirate Ship, Polar Station, Restaurant, Supermarket, Amusement Park, Library, University, Art Museum, Vineyard";
+
 
 io.on('connection', (socket) => {
     // Initialize user object on new connection
@@ -36,7 +42,13 @@ io.on('connection', (socket) => {
     socket.on('start game', () => {
         socket.on('send locations', (customLocations) => {
           //console.log('in the socket part: ' + customLocations);
-          assignLocation(customLocations); // assign custom locations
+          if(customLocations.length > 10){
+               assignLocation(customLocations); // assign custom locations
+          }
+          else{
+               console.log("used preset locations bc not enough inputs");
+               assignLocation(preSetLocations); // assign pre set locations
+          }
         });
     });
 
@@ -86,6 +98,25 @@ function assignLocation(customLocations) {
      console.log("Amount of locations: " + locations.length);
      console.log("picking from array number: " + random);
      console.log("Location: " + locations[random]);
+
+/*
+     const HFInference = (
+         await import("https://cdn.skypack.dev/@huggingface/inference@2.0.0")
+       ).HfInference;
+       const hf = new HFInference(TOKEN);
+       const blob = await hf.textToImage({
+         inputs:
+           "a woman wearing a poncho oversized puffer jacket, inspired by OffWhite, tumblr, inspired by Yanjun Cheng style, digital art, lofi girl internet meme, trending on dezeen, catalog photo, 3 d render beeple, rhads and lois van baarle, cartoon style illustration, bright pastel colors, a beautiful artwork illustration, retro anime girl <lora:iu_V35:0.5> <lora:epiNoiseoffset_v2:0.5>",
+         parameters: {
+           negative_prompt: "easynegative",
+         },
+         model: "prompthero/openjourney-v4",
+       });
+       const tab = window.open((target = "_blank"));
+       tab.location.href = window.URL.createObjectURL(blob);
+     }
+*/
+
      assignRolesAndNotify();
 }
 

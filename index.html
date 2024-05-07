@@ -66,9 +66,21 @@
         });
         
         socket.on('location notification', (location) => {
-          console.log('Your location: ' + location);
-          const locationDiv = document.getElementById('locationDisplay');
-          locationDiv.textContent = `Your location: ${location}`;
+             console.log('Your location: ' + location);
+             const locationDiv = document.getElementById('locationDisplay');
+             locationDiv.textContent = `Your location: ${location}`;
+             // Create an image element
+             const img = document.createElement('img');
+             // Set the source of the image
+             img.src = 'https://i.pinimg.com/736x/a6/67/73/a667732975f0f1da1a0fd4625e30d776.jpg'; // Example path
+             img.alt = 'Location Image'; // Alt text for the image
+
+             // Optionally, set the image dimensions
+             img.width = 200;
+             img.height = 200;
+
+             // Append the image to the location display div
+             locationDiv.appendChild(img);
         });
 
 

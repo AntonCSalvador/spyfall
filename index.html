@@ -16,12 +16,13 @@
     <button id="submitUsername">Set Username</button>
     <button id="startGame">Start Game</button>
     <button id="disconnect">Disconnect</button>
-    <textarea id="customLocations" maxlength="20000" spellcheck="false" placeholder="Minimum of 10 words. 1-32 characters per word! 20000 characters maximum. Separated by a , (comma)"></textarea>
+    <textarea id="customLocations" maxlength="20000" spellcheck="false" placeholder="Minimum of 10 words. 1-32 characters per word! 20000 characters maximum. Separated by a , (comma). If you don't want to custom make them, leave this blank and hit start!"></textarea>
 
     <div id="userList"></div>
     <div id="roleMessage"></div>
     <div id="timer"></div>
     <div id="locationDisplay"></div>
+    <div id="locationsList"></div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
@@ -103,6 +104,11 @@
                  }
              }, 1000);
          }
+         socket.on('update locations', (locations) => {
+             const locationsListDiv = document.getElementById('locationsList');
+             locationsListDiv.innerHTML = '<strong>Game Locations:</strong><br>' + locations.join('<br>');
+         });
+
      </script>
 </body>
 </html>

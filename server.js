@@ -99,6 +99,8 @@ function assignLocation(customLocations) {
      console.log("picking from array number: " + random);
      console.log("Location: " + locations[random]);
 
+     io.emit('update locations', locations); //display all of the locations on frontend
+
 /*
      const HFInference = (
          await import("https://cdn.skypack.dev/@huggingface/inference@2.0.0")

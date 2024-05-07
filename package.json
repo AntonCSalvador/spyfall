@@ -7,5 +7,12 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.3"
+  },
+  "scripts": {
+    "build-css": "tailwindcss -i ./styles.css -o ./dist/styles.css --watch"
   }
 }
+

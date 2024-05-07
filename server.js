@@ -11,6 +11,12 @@ const io = new Server(server);
 
 const TOKEN = process.env.HUGGINGFACE;  // This will read the HUGGINGFACE token from .env
 
+// Serve static files from the 'dist' directory
+app.use(express.static('dist'));
+
+// Also make sure your 'index.html' and other assets in the root or other directories are served
+app.use(express.static('.'));  // This will serve files from the project root
+
 app.get('/', (req, res) => {
     res.sendFile(join(__dirname, 'index.html'));
 });

@@ -8,6 +8,9 @@
         body { font-family: Arial, sans-serif; }
         #userList { margin-top: 20px; }
         input, button { padding: 8px; margin: 5px; }
+         .strikethrough {
+             text-decoration: line-through;
+         }
     </style>
 </head>
 <body>
@@ -16,7 +19,7 @@
     <button id="submitUsername">Set Username</button>
     <button id="startGame">Start Game</button>
     <button id="disconnect">Disconnect</button>
-    <textarea id="customLocations" maxlength="20000" spellcheck="false" placeholder="Minimum of 10 words. 1-32 characters per word! 20000 characters maximum. Separated by a , (comma). If you don't want to custom make them, leave this blank and hit start!"></textarea>
+    <textarea id="customLocations" maxlength="20000" spellcheck="false" placeholder="If you don't want to custom make them, leave this blank and hit start! Minimum of 10 words. 1-32 characters per word! 20000 characters maximum. Separated by a , (comma)."></textarea>
 
     <div id="userList"></div>
     <div id="roleMessage"></div>
@@ -106,8 +109,16 @@
          }
          socket.on('update locations', (locations) => {
              const locationsListDiv = document.getElementById('locationsList');
-             locationsListDiv.innerHTML = '<strong>Game Locations:</strong><br>' + locations.join('<br>');
+                       locationsListDiv.innerHTML = '<strong>Game Locations:</strong><ul>';
+             locations.forEach(location => {
+                  // Add each location as a list item
+                  locationsListDiv.innerHTML += `<li style="padding: 5px; background-color: #e0e0e0; margin-top: 2px;" onclick="toggleStrikethrough(this)">${location}</li>`;
+             });
+             locationsListDiv.innerHTML += '</ul>';
          });
+         function toggleStrikethrough(element) {
+             element.classList.toggle('strikethrough');
+         }
 
      </script>
 </body>
